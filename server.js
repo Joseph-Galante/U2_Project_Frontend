@@ -1,13 +1,13 @@
 //=============== SETUP ===============//
 
 // express
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 
 // route table
-const routesReport = require('rowdy-logger').begin(app)
+const routesReport = require('rowdy-logger').begin(app);
 
-const path = require('path')
+const path = require('path');
 
 
 //=============== ROUTES ===============//

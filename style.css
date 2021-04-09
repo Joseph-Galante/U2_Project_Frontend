@@ -1,0 +1,13 @@
+.nav-link {
+    color: blue;
+    text-decoration: underline;
+    margin: 0.5em;
+}
+
+.nav-link:hover {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}

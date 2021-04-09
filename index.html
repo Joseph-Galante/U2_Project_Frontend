@@ -5,18 +5,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css"href="./style.css">
-    <title>Minecraft Recipe API</title>
+    <title>Minecraft Recipe App</title>
 </head>
 <body>
     <nav>
         <span id="home-link" class="nav-link">Home</span>
+        <span id="recipe-link" class="nav-link">Recipe Book</span>
         <span id="signup-link" class="nav-link">Sign Up</span>
         <span id="login-link" class="nav-link">Login</span>
+        <span id="profile-link" class="nav-link">Profile</span>
         <span id="logout-link" class="nav-link">Logout</span>
     </nav>
 
     <div class="homeScreen">
         <h1>Welcome to the Minecraft Recipe App</h1>
+        <form class="recipe-form">
+            <section class="ingredients">
+                <section class="ingredient">
+                    <input type="text" id="ingredient-name-1" placeholder="Ingredient">
+
+                    <input type="number" id="ingredient-quantity-1" placeholder="Quantity">
+                </section>
+            </section>
+
+            <input type="button" id="add-ingredient" value="+">
+            <input type="button" id="remove-ingredient" value="-">
+      
+            <input type="submit" value="Get Recipes">
+        </form>
+        <div class="recipeInfo">
+            <h1>Recipe Info</h1>
+        </div>
+    </div>
+    <div class="recipeBook">
+        <h1>User's Recipe Book</h1>
     </div>
     <div class="signUpScreen">
         <form class="signup-form">
@@ -29,7 +51,7 @@
             <label for="signup-password">Password</label>
             <input type="password" id="signup-password">
       
-            <input type="submit" value="Sign Up!">
+            <input type="submit" value="Sign Up">
         </form>
     </div>
     <div class="loginScreen">
@@ -40,8 +62,24 @@
             <label for="login-password">Password</label>
             <input type="password" id="login-password">
       
-            <input type="submit" value="Log In!">
-          </form>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+    <div class="profile">
+        <input type="button" id="edit-user" value="Edit">
+        <form class="update-form">
+            <label for="update-name">Name</label>
+            <input type="text" id="update-name">
+
+            <label for="update-email">Email</label>
+            <input type="text" id="update-email">
+            
+            <label for="update-password">Password</label>
+            <input type="password" id="update-password">
+            
+            <input type="button" id="cancel-changes" value="Cancel Changes">
+            <input type="button" id="save-changes" value="Save Changes">
+        </form>
     </div>
 
 <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js "></script>
