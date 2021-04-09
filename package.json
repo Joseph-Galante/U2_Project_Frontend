@@ -1,0 +1,24 @@
+{
+  "name": "u2_project_frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Joseph-Galante/U2_Project_Frontend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Joseph-Galante/U2_Project_Frontend/issues"
+  },
+  "homepage": "https://github.com/Joseph-Galante/U2_Project_Frontend#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "path": "^0.12.7",
+    "rowdy-logger": "^1.0.2"
+  }
+}

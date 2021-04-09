@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css"href="./style.css">
+    <title>Minecraft Recipe API</title>
+</head>
+<body>
+    <nav>
+        <span id="home-link" class="nav-link">Home</span>
+        <span id="signup-link" class="nav-link">Sign Up</span>
+        <span id="login-link" class="nav-link">Login</span>
+        <span id="logout-link" class="nav-link">Logout</span>
+    </nav>
+
+    <div class="homeScreen">
+        <h1>Welcome to the Minecraft Recipe App</h1>
+    </div>
+    <div class="signUpScreen">
+        <form class="signup-form">
+            <label for="signup-name">Name</label>
+            <input type="text" id="signup-name">
+            
+            <label for="signup-email">Email</label>
+            <input type="text" id="signup-email">
+            
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password">
+      
+            <input type="submit" value="Sign Up!">
+        </form>
+    </div>
+    <div class="loginScreen">
+        <form class="login-form">
+            <label for="login-email">Email</label>
+            <input type="text" id="login-email">
+            
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password">
+      
+            <input type="submit" value="Log In!">
+          </form>
+    </div>
+
+<script async defer src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js "></script>
+<script async defer src="./main.js"></script>
+</body>
+</html>
