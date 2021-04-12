@@ -18,6 +18,7 @@ const div_Profile = document.querySelector('.profile');
 
 //sections
 const sec_Ingredients = document.querySelector('.ingredients');
+const sec_ProfileInfo = document.querySelector('.profile-info');
 
 // forms
 const form_UpdateProfile = document.querySelector('.update-form');
@@ -57,9 +58,7 @@ nav_RecipeLink.addEventListener('click', async () => {
 
 // profile
 nav_ProfileLink.addEventListener('click', async () => {
-    // show profile
-    displayDiv(div_Profile);
-    // fill update form values with current info
+    showProfile();
 })
 
 // logout
@@ -74,7 +73,15 @@ nav_LogoutLink.addEventListener('click', () => {
 
 // add ingredient
 but_AddIngredient.addEventListener('click', addIngredient);
+// remove ingredient
 but_RemoveIngredient.addEventListener('click', removeIngredient);
+
+// edit profile
+but_EditProfile.addEventListener('click', editProfile);
+// save profile changes
+but_SaveChanges.addEventListener('click', saveChanges);
+// cancel profile changes
+but_CancelChanges.addEventListener('click', cancelChanges);
 
 
 //=============== FORM SUBMISSIONS ===============//
@@ -143,7 +150,7 @@ document.querySelector('.login-form').addEventListener('submit', async (event) =
 })
 
 // recipe search
-document.querySelector('.recipe-form').addEventListener('submit', async (event) => 
+document.querySelector('.recipe-form').addEventListener('submit', (event) => 
 {
     event.preventDefault();
     // clear recipe info
@@ -153,45 +160,33 @@ document.querySelector('.recipe-form').addEventListener('submit', async (event) 
     // populate recipe info section
     ingredients.forEach(ingredient =>
     {
-        // create new ingredient section
-        const newIngredient = document.createElement('section');
         // get ingredient values
         const name = ingredient.children[0].value;
         const quantity = ingredient.children[1].value;
-        // check if ingredient quantity is 1
-        if (quantity == 1)
+        // check if fields are empty
+        if (name !== '' && quantity !== '')
         {
-            // one of ingredient
-            newIngredient.innerHTML = `${quantity}x ${name}`;
+            // create new ingredient section
+            const newIngredient = document.createElement('section');
+            // check if ingredient quantity is 1
+            if (quantity == 1)
+            {
+                // one of ingredient
+                newIngredient.innerHTML = `${quantity}x ${name}`;
+            }
+            // quantity other than 1
+            else
+            {
+                // many of ingredient
+                newIngredient.innerHTML = `${quantity}x ${name}s`;
+            }
+            // add new ingredient to recipe info
+            div_RecipeInfo.append(newIngredient);
         }
-        // quantity other than 1
-        else
-        {
-            // many of ingredient
-            newIngredient.innerHTML = `${quantity}x ${name}s`;
-        }
-        // add new ingredient to recipe info
-        div_RecipeInfo.append(newIngredient);
     })
     // display recipe info
+    checkRecipes(ingredients);
     displayDiv(div_RecipeInfo);
-    try {
-
-    } catch (error) {
-    alert('recipe search failed');
-    }
-})
-
-// update profile
-document.querySelector('.update-form').addEventListener('submit', async (event) => 
-{
-    event.preventDefault();
-
-    try {
-
-    } catch (error) {
-    alert('profile update failed');
-    }
 })
 
 
@@ -277,15 +272,228 @@ function addIngredient ()
     // add new ingredient to ingredients section
     sec_Ingredients.append(newIngredient);
 }
-
 // remove ingredient DOM element
 function removeIngredient ()
 {
     // remove last child of ingredients section
     sec_Ingredients.removeChild(sec_Ingredients.lastElementChild);
 }
+// check for possible recipes with given ingredients
+async function checkRecipes (ingredients)
+{
+    // see if an ingredient can be used for a recipe and if so check for the other required ingredients. if everything checks out, add recipe to array to be returned
 
-// clear DOM element
+    // final recipe array
+    let validRecipes = [];
+    // condensed recipe ingredients array
+    let requiredIngredients = [{ recipes }];
+    // condensed ingredients array
+    let givenIngredients = [];
+    try {
+        // condense ingredient objects
+        ingredients.forEach(ingredient =>
+        {
+            // grab ingredient values
+            const name = ingredient.children[0].value.toLowerCase();
+            const quantity = ingredient.children[1].value;
+            // check if either value is empty
+            if (name !== '' && quantity !== '')
+            {
+                // new ingredient obj
+                const denseIngredient = {
+                    name: name,
+                    quantity: quantity
+                }
+                // add to array
+                givenIngredients.push(denseIngredient);
+            }
+        })
+        console.log(givenIngredients);
+        // get all recipes
+        const res = await axios.get('http://localhost:3001/recipes');
+        const recipes = res.data.recipes;
+        // condense recipe ingredients
+        recipes.forEach(recipe =>
+        {
+            // loop through ingredients
+            for (let i = 1; i <= 9; i++)
+            {
+                // get ingredient name
+                const name = eval(`recipe.ing${i}`);
+                // check if name is empty
+                if (name !== '')
+                {
+                    // check if array is empty
+                    if (requiredIngredients.recipes.length === 0)
+                    {
+                        requiredIngredients.recipes.push({ ingredient: name, quantity: 1 })
+                    }
+                    // array not empty
+                    else
+                    {
+                        // loop through recipes to check for ingredients
+                        requiredIngredients.recipes.forEach(recipe =>
+                        {
+                            // ingredient already exists
+                            if (name === recipe.ingredient)
+                            {
+                                recipe.quantity++;
+                            }
+                            // does not exist
+                            else
+                            {
+                                // requiredIngredients.push({ ingredient: name, quantity: 1 })
+                            }
+                        })
+                    }
+                }
+            }
+        })
+        console.log(requiredIngredients);
+        // console.log(recipes);
+        // // check if ingredients match recipes
+        // recipes.forEach(recipe =>
+        // {
+        //     // array to store recipe matching ingredients
+        //     let recipeIngredients = [];
+        //     // loop through each ingredient listed in recipe
+        //     for (let i = 1; i <= 9; i++)
+        //     {
+        //         // loop through each given ingredient and see if it matches the recipes ingredient
+        //         givenIngredients.forEach(ingredient =>
+        //         {
+        //             const ingredientName = ingredient.name;
+        //             if (ingredientName === eval(`recipe.ing${i}`))
+        //             {
+        //                 // check if this is first ingredient
+        //                 if (recipeIngredients.length === 0)
+        //                 {
+        //                     recipeIngredients.push({ name: ingredientName, quantity: 1 });
+        //                 }
+        //                 // array already has ingredients
+        //                 else
+        //                 {
+        //                     // check if array already contains ingredient
+        //                     recipeIngredients.forEach(ingredient =>
+        //                     {
+        //                         // ingredient already exists
+        //                         if (ingredientName === ingredient.name)
+        //                         {
+        //                             ingredient.quantity++;
+        //                         }
+        //                         // ingredient does not exist
+        //                         else
+        //                         {
+        //                             recipeIngredients.push({ name: ingredientName, quantity: 1 });
+        //                         }
+        //                     })
+        //                 }
+        //             }
+        //         })
+        //     }
+        //     console.log(recipeIngredients)
+        //     givenIngredients.forEach(givenIngredient =>
+        //     {
+        //         recipeIngredients.forEach(ingredient =>
+        //         {
+        //             // check if given ingredients match required
+        //             if (givenIngredient.name === ingredient.name)
+        //             {
+        //                 // check if quantity is high enough
+        //                 if (givenIngredient.quantity >= ingredient.quantity)
+        //                 {
+        //                     // add recipe as valid recipe if not already present
+        //                     if (!validRecipes.includes(recipe))
+        //                     {
+        //                         validRecipes.push(recipe);
+        //                     }
+        //                 }
+        //             }
+        //         })
+        //     })
+        // })
+        // console.log(validRecipes);
+    } catch (error) {
+        alert('there was a problem with getting the recipes');
+    }
+}
+
+
+// show profile info
+async function showProfile ()
+{
+    // show profile div
+    displayDiv(div_Profile);
+    // show profile info and edit button
+    sec_ProfileInfo.classList.remove('hidden');
+    but_EditProfile.classList.remove('hidden');
+
+    // grab user
+    const res = await axios.get('http://localhost:3001/users/profile', {
+        headers: {
+            Authorization: localStorage.getItem('userId')
+        }
+    })
+    const user = res.data.user;
+    // show user info
+    document.querySelector('#profile-name').innerHTML = user.name;
+    document.querySelector('#profile-email').innerHTML = user.email;
+    // document.querySelector('#profile-password').innerHTML = user.password;
+    // fill edit fields
+    document.querySelector('#update-name').value = user.name;
+    document.querySelector('#update-email').value = user.email;
+}
+// update user profile
+function editProfile ()
+{
+    // hide edit button and profile info
+    but_EditProfile.classList.add('hidden');
+    sec_ProfileInfo.classList.add('hidden');
+    // show update form and fill fields
+    form_UpdateProfile.classList.remove('hidden');
+}
+// save profile changes
+async function saveChanges ()
+{
+    // get changes for user
+    const name = document.querySelector('#update-name').value;
+    const email = document.querySelector('#update-email').value;
+    // const password = document.querySelector('#update-password').value;
+    try {
+        // check if any fields are empty
+        if (name === '' || email === '')// || password === '')
+        {
+            alert('all fields are required');
+        }
+        // no empty fields
+        else
+        {
+            // update user
+            await axios.put('http://localhost:3001/users/profile', {
+                name: name,
+                email: email
+                // password: password
+            }, {
+                headers: {
+                    Authorization: localStorage.getItem('userId')
+                }
+            })
+            // display new profile info
+            showProfile();
+        }
+    } catch (error) {
+        alert('profile could not be updated');
+    }
+}
+// cancel profile changes
+function cancelChanges ()
+{
+    // display profile info and edit button
+    showProfile();
+}
+
+
+// clear DOM element of all but one child
 function clearElement (element)
 {
     while (element.childElementCount > 1)
