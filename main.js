@@ -146,6 +146,7 @@ document.querySelector('.login-form').addEventListener('submit', async (event) =
 
     } catch (error) {
     alert('login failed');
+    console.log(error)
     console.log(error.message);
     }
 })
