@@ -28,7 +28,7 @@ app.get('/main.js', async (req, res) => {
     {
       files: filepath,
       from: 'http://localhost:3001',
-      to: 'http://minecraft-recipe-app.herokuapp.com'
+      to: 'https://minecraft-recipe-app.herokuapp.com'
     })
   }
   res.sendFile(filepath)
