@@ -8,6 +8,7 @@ const app = express();
 const routesReport = require('rowdy-logger').begin(app);
 
 const path = require('path');
+const replaceInFile = require('replace-in-file');
 
 
 //=============== ROUTES ===============//
@@ -18,8 +19,18 @@ app.get('/', (req, res) => {
   res.sendFile(filepath)
 })
 
-app.get('/main.js', (req, res) => {
+app.get('/main.js', async (req, res) => {
   const filepath = path.join(__dirname, 'main.js')
+  // check if running from heroku
+  if (process.env.NODE_ENV === 'production')
+  {
+    await replaceInFile(
+    {
+      files: filepath,
+      from: 'http://localhost:3001',
+      to: 'http://minecraft-recipe-app.herokuapp.com'
+    })
+  }
   res.sendFile(filepath)
 })
 
