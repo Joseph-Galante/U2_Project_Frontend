@@ -106,7 +106,7 @@ document.querySelector('.signup-form').addEventListener('submit', async (event) 
     })
     console.log(res.data)
     // grab user id
-    const userId = res.data.user.id;
+    const userId = res.data.userId;
     // add to local storage - login user
     localStorage.setItem('userId', userId);
 
