@@ -115,7 +115,8 @@ document.querySelector('.signup-form').addEventListener('submit', async (event) 
     displayDiv(div_Home);
 
     } catch (error) {
-    alert('email is already taken');
+        alert('email is already taken');
+        console.log(error.message)
     }
 })
 
