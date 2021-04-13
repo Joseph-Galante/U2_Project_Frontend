@@ -66,29 +66,7 @@ nav_LoginLink.addEventListener('click', () => {
 nav_RecipeLink.addEventListener('click', async () => {
     // show recipe book
     displayDiv(div_Recipes);
-    // clear recipe id from local storage
-    localStorage.removeItem('recipe');
-    // empty recipes
-    validRecipes = [];
-    // grab user
-    const userRes = await axios.get('http://localhost:3001/users/profile', {
-        headers: {
-            Authorization: localStorage.getItem('userId')
-        }
-    });
-    const user = userRes.data.user;
-    // show user info
-    document.querySelector('#user-recipe-book').innerHTML = `${user.name}'s Recipe Book`;
-
-    // grab users saved recipes
-    const res = await axios.get('http://localhost:3001/users/recipes', {
-        headers: {
-            Authorization: localStorage.getItem('userId')
-        }
-    });
-    validRecipes = res.data.recipes;
-    // show recipes
-    showRecipes(validRecipes, true, false, false);
+    showRecipeBook();
 })
 
 // profile
@@ -130,6 +108,8 @@ but_NextRecipe.addEventListener('click', () =>
 })
 // save recipe
 but_SaveRecipe.addEventListener('click', saveRecipe);
+// delete recipe
+but_DeleteRecipe.addEventListener('click', deleteRecipe);
 
 
 //=============== FORM SUBMISSIONS ===============//
@@ -548,6 +528,66 @@ async function saveRecipe ()
         // console.log(res.data.message);
     } catch (error) {
         alert('recipe could not be saved');
+        console.log(error.message);
+    }
+}
+// delete recipe
+async function deleteRecipe ()
+{
+    // get recipe name from dom element
+    const recipe = document.querySelector('.recipe-name').id;
+
+    try {
+        // delete recipe from recipe book
+        const res = await axios.delete('http://localhost:3001/users/recipes', {
+            headers: {
+                Authorization: localStorage.getItem('userId')
+            },
+            data: {
+                recipe: recipe
+            }
+        })
+
+        // show recipe book
+        showRecipeBook();
+    } catch (error) {
+        alert('recipe could not be deleted');
+        console.log(error.message);
+    }
+}
+
+// show recipe book recipes
+async function showRecipeBook ()
+{
+    // clear recipe id from local storage
+    localStorage.removeItem('recipe');
+    // empty recipes
+    validRecipes = [];
+    try {
+        // grab user
+        const userRes = await axios.get('http://localhost:3001/users/profile', {
+            headers: {
+                Authorization: localStorage.getItem('userId')
+            }
+        });
+        const user = userRes.data.user;
+        // show user info
+        document.querySelector('#user-recipe-book').innerHTML = `${user.name}'s Recipe Book`;
+
+        // grab users saved recipes
+        const res = await axios.get('http://localhost:3001/users/recipes', {
+            headers: {
+                Authorization: localStorage.getItem('userId')
+            }
+        });
+        validRecipes = res.data.recipes;
+        // show recipes if there are recipes to show
+        if (validRecipes.length > 0)
+        {
+            showRecipes(validRecipes, true, false, false);
+        }
+    } catch (error) {
+        alert('could not get recipe book');
         console.log(error.message);
     }
 }
