@@ -236,7 +236,8 @@ function checkForUser ()
     // display recipe book, logout link
     nav_RecipeLink.classList.remove('hidden');
     nav_LogoutLink.classList.remove('hidden');
-    // display user with saved weather locations
+    // show save recipe button
+    but_SaveRecipe.classList.remove('hidden');
   }
   // no user logged in
   else
@@ -247,6 +248,8 @@ function checkForUser ()
     // display signup, login links
     nav_SignupLink.classList.remove('hidden');
     nav_LoginLink.classList.remove('hidden');
+    // hide save recipe button
+    but_SaveRecipe.classList.add('hidden');
   }
 }
 // call on page load - see if user is still logged in
@@ -277,6 +280,8 @@ function displayDiv (element)
             // show save recipe button
             but_SaveRecipe.classList.remove('hidden');
         }
+        // remove save button if no user
+        checkForUser();
         return;
     }
 
@@ -331,8 +336,12 @@ function addIngredient ()
 // remove ingredient DOM element
 function removeIngredient ()
 {
-    // remove last child of ingredients section
-    sec_Ingredients.removeChild(sec_Ingredients.lastElementChild);
+    // check if there is at least one ingredient
+    if (sec_Ingredients.childElementCount > 1)
+    {
+        // remove last child of ingredients section
+        sec_Ingredients.removeChild(sec_Ingredients.lastElementChild);
+    }
 }
 // check for possible recipes with given ingredients
 async function checkRecipes (ingredients)
@@ -378,6 +387,7 @@ async function checkRecipes (ingredients)
                     // check if array is empty
                     if (recipe.requiredIngredients.length === 0)
                     {
+                        // initialize array
                         recipe.requiredIngredients.push({ ingredient: name, quantity: 1 });
                     }
                     // array not empty
@@ -426,6 +436,26 @@ async function checkRecipes (ingredients)
                             validRecipes.push(recipe);
                         }
                     }
+                    // rabbit stew check
+                    if (requiredIngredient.ingredient == 'mushroom')
+                    {
+                        // check if given ingredient is red or brown mushroom
+                        if (ingredient.name === 'red mushroom' || ingredient.name === 'brown mushroom')
+                        {
+                            // check if given quantity is enough for recipe
+                            if (ingredient.quantity >=  requiredIngredient.quantity)
+                            {
+                                count++;
+                            }
+                            
+                            // check if count reached length of required ingredients
+                            if (recipe.requiredIngredients.length === count)
+                            {
+                                // push recipe to output array
+                                validRecipes.push(recipe);
+                            }
+                        }
+                    }
                 })
             })
         })
@@ -439,6 +469,11 @@ async function checkRecipes (ingredients)
 // display recipes
 function showRecipes (recipes, start, prev, next)
 {
+    // check for empty recipes arr
+    if (recipes.length === 0)
+    {
+        return;
+    }
     // display recipe grid div
     displayDiv(div_RecipeGrid);
     // current recipe var

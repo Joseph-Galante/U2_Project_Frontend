@@ -14,7 +14,7 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  width: 310px;
+  width: 320px;
   height: 300px;
 }
 
@@ -25,7 +25,7 @@
   width: 100px;
   height: 100px;
   margin: auto 0;
-  border: 1px solid red;
+  border: 3px solid black;
 }
 
 
@@ -37,6 +37,12 @@
 }
 .bowl {
   background-image: url("https://i.imgur.com/yItgkUl.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.mushroom {
+  background-image: url("https://i.imgur.com/qJDUQdX.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: 60%;
