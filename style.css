@@ -19,10 +19,141 @@
 }
 
 .slot {
+  display: flex;
+  justify-content: center;
+  align-content: center;
   width: 100px;
   height: 100px;
   margin: auto 0;
   border: 1px solid red;
+}
+
+
+.wooden_plank {
+  background-image: url("https://i.imgur.com/UtSSeHD.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.bowl {
+  background-image: url("https://i.imgur.com/yItgkUl.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.red_mushroom {
+  background-image: url("https://i.imgur.com/qJDUQdX.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.brown_mushroom {
+  background-image: url("https://i.imgur.com/N2JYHLn.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.wheat {
+  background-image: url("https://i.imgur.com/XRRvPcL.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.apple {
+  background-image: url("https://i.imgur.com/WLdHEIy.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.gold_nugget {
+  background-image: url("https://i.imgur.com/7TKWkCB.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 40%;
+}
+.sugar_cane {
+  background-image: url("https://i.imgur.com/JobYlGc.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.milk_bucket {
+  background-image: url("https://i.imgur.com/yUAlSnu.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.sugar {
+  background-image: url("https://i.imgur.com/x2WAPTi.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.egg {
+  background-image: url("https://i.imgur.com/vKUzFpa.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.cocoa_beans {
+  background-image: url("https://i.imgur.com/nUN7wzE.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.melon_slice {
+  background-image: url("https://i.imgur.com/C2MxWsm.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.pumpkin {
+  background-image: url("https://i.imgur.com/qORaG6L.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.carrot {
+  background-image: url("https://i.imgur.com/LpQKmLy.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.cooked_rabbit {
+  background-image: url("https://i.imgur.com/SpoGXhk.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.baked_potato {
+  background-image: url("https://i.imgur.com/jwaQVox.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.flower {
+  background-image: url("https://i.imgur.com/Qf9da2O.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.glass_bottle {
+  background-image: url("https://i.imgur.com/7Cu2ER7.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.honey_block {
+  background-image: url("https://i.imgur.com/p4sRf5L.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+.gold_ingot {
+  background-image: url("https://i.imgur.com/DwJ6QwL.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
 }
 
 .hidden {
