@@ -288,8 +288,6 @@ async function checkRecipes (ingredients)
 
     // final recipe array
     let validRecipes = [];
-    // condensed recipe ingredients array
-    let requiredIngredients = [{ recipes }];
     // condensed ingredients array
     let givenIngredients = [];
     try {
@@ -311,13 +309,13 @@ async function checkRecipes (ingredients)
                 givenIngredients.push(denseIngredient);
             }
         })
-        console.log(givenIngredients);
         // get all recipes
         const res = await axios.get('http://localhost:3001/recipes');
         const recipes = res.data.recipes;
         // condense recipe ingredients
         recipes.forEach(recipe =>
         {
+            recipe.requiredIngredients = [];
             // loop through ingredients
             for (let i = 1; i <= 9; i++)
             {
@@ -327,95 +325,61 @@ async function checkRecipes (ingredients)
                 if (name !== '')
                 {
                     // check if array is empty
-                    if (requiredIngredients.recipes.length === 0)
+                    if (recipe.requiredIngredients.length === 0)
                     {
-                        requiredIngredients.recipes.push({ ingredient: name, quantity: 1 })
+                        recipe.requiredIngredients.push({ ingredient: name, quantity: 1 });
                     }
                     // array not empty
                     else
                     {
-                        // loop through recipes to check for ingredients
-                        requiredIngredients.recipes.forEach(recipe =>
+                        for (let i = 0; i < recipe.requiredIngredients.length; i++)
                         {
-                            // ingredient already exists
-                            if (name === recipe.ingredient)
+                            // check if ingredient already exists
+                            if (name === recipe.requiredIngredients[i].ingredient)
                             {
-                                recipe.quantity++;
+                                // increment quantity of ingredient required
+                                recipe.requiredIngredients[i].quantity++;
+                                break;
                             }
-                            // does not exist
-                            else
+
+                            // at end of ingredients
+                            if (i === recipe.requiredIngredients.length - 1)
                             {
-                                // requiredIngredients.push({ ingredient: name, quantity: 1 })
+                                // add ingredient to array
+                                recipe.requiredIngredients.push({ ingredient: name, quantity: 1 });
+                                break;
                             }
-                        })
+                        }
                     }
                 }
             }
+            // check if given ingredients match required ingredients
+            let count = 0;
+            recipe.requiredIngredients.forEach(requiredIngredient =>
+            {
+                givenIngredients.forEach(ingredient =>
+                {
+                    // check if names match
+                    if (requiredIngredient.ingredient === ingredient.name)
+                    {
+                        // check if given quantity is enough for recipe
+                        if (ingredient.quantity >=  requiredIngredient.quantity)
+                        {
+                            count++;
+                        }
+                        
+                        // check if count reached length of required ingredients
+                        if (recipe.requiredIngredients.length === count)
+                        {
+                            // push recipe to output array
+                            validRecipes.push(recipe);
+                        }
+                    }
+                })
+            })
         })
-        console.log(requiredIngredients);
-        // console.log(recipes);
-        // // check if ingredients match recipes
-        // recipes.forEach(recipe =>
-        // {
-        //     // array to store recipe matching ingredients
-        //     let recipeIngredients = [];
-        //     // loop through each ingredient listed in recipe
-        //     for (let i = 1; i <= 9; i++)
-        //     {
-        //         // loop through each given ingredient and see if it matches the recipes ingredient
-        //         givenIngredients.forEach(ingredient =>
-        //         {
-        //             const ingredientName = ingredient.name;
-        //             if (ingredientName === eval(`recipe.ing${i}`))
-        //             {
-        //                 // check if this is first ingredient
-        //                 if (recipeIngredients.length === 0)
-        //                 {
-        //                     recipeIngredients.push({ name: ingredientName, quantity: 1 });
-        //                 }
-        //                 // array already has ingredients
-        //                 else
-        //                 {
-        //                     // check if array already contains ingredient
-        //                     recipeIngredients.forEach(ingredient =>
-        //                     {
-        //                         // ingredient already exists
-        //                         if (ingredientName === ingredient.name)
-        //                         {
-        //                             ingredient.quantity++;
-        //                         }
-        //                         // ingredient does not exist
-        //                         else
-        //                         {
-        //                             recipeIngredients.push({ name: ingredientName, quantity: 1 });
-        //                         }
-        //                     })
-        //                 }
-        //             }
-        //         })
-        //     }
-        //     console.log(recipeIngredients)
-        //     givenIngredients.forEach(givenIngredient =>
-        //     {
-        //         recipeIngredients.forEach(ingredient =>
-        //         {
-        //             // check if given ingredients match required
-        //             if (givenIngredient.name === ingredient.name)
-        //             {
-        //                 // check if quantity is high enough
-        //                 if (givenIngredient.quantity >= ingredient.quantity)
-        //                 {
-        //                     // add recipe as valid recipe if not already present
-        //                     if (!validRecipes.includes(recipe))
-        //                     {
-        //                         validRecipes.push(recipe);
-        //                     }
-        //                 }
-        //             }
-        //         })
-        //     })
-        // })
-        // console.log(validRecipes);
+        console.log(validRecipes);
+        // display recipe info
     } catch (error) {
         alert('there was a problem with getting the recipes');
     }
