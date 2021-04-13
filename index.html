@@ -34,11 +34,33 @@
             <input type="submit" value="Get Recipes">
         </form>
         <div class="recipeInfo">
-            <h1>Recipe Info</h1>
+            <h1>Ingredients</h1>
         </div>
     </div>
     <div class="recipeBook">
-        <h1>User's Recipe Book</h1>
+        <h1 id="user-recipe-book">User's Recipe Book</h1>
+    </div>
+    <div class="recipe-grid">
+        <h1 class='recipe-name'>Recipe Name</h1>
+
+        <input class="hidden" type="button" id="prev-recipe" value="Previous Recipe">
+        
+        <section class="ingredients-grid">
+            <section class="slot" id="ingredient-slot-1"></section>
+            <section class="slot" id="ingredient-slot-2"></section>
+            <section class="slot" id="ingredient-slot-3"></section>
+            <section class="slot" id="ingredient-slot-4"></section>
+            <section class="slot" id="ingredient-slot-5"></section>
+            <section class="slot" id="ingredient-slot-6"></section>
+            <section class="slot" id="ingredient-slot-7"></section>
+            <section class="slot" id="ingredient-slot-8"></section>
+            <section class="slot" id="ingredient-slot-9"></section>
+        </section>
+
+        <input class="hidden" type="button" id="next-recipe" value="Next Recipe">
+
+        <input type="button" id="save-recipe" value="Save Recipe">
+        <input type="button" id="delete-recipe" value="Delete Recipe">
     </div>
     <div class="signUpScreen">
         <form class="signup-form">

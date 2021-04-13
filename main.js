@@ -1,3 +1,8 @@
+//=============== VARIABLES ===============//
+// final recipe array
+let validRecipes = [];
+
+
 //=============== DOCUMENT QUERIES ===============//
 
 // nav links
@@ -15,6 +20,7 @@ const div_Signup = document.querySelector('.signUpScreen');
 const div_Login = document.querySelector('.loginScreen');
 const div_Recipes = document.querySelector('.recipeBook');
 const div_Profile = document.querySelector('.profile');
+const div_RecipeGrid = document.querySelector('.recipe-grid');
 
 //sections
 const sec_Ingredients = document.querySelector('.ingredients');
@@ -29,6 +35,10 @@ const but_RemoveIngredient = document.querySelector('#remove-ingredient');
 const but_EditProfile = document.querySelector('#edit-user');
 const but_CancelChanges = document.querySelector('#cancel-changes');
 const but_SaveChanges = document.querySelector('#save-changes');
+const but_PrevRecipe = document.querySelector('#prev-recipe');
+const but_NextRecipe = document.querySelector('#next-recipe');
+const but_SaveRecipe = document.querySelector('#save-recipe');
+const but_DeleteRecipe = document.querySelector('#delete-recipe');
 
 //=============== EVENT LISTENERS ===============//
 
@@ -36,6 +46,8 @@ const but_SaveChanges = document.querySelector('#save-changes');
 nav_HomeLink.addEventListener('click', () => {
     // show home screen
     displayDiv(div_Home);
+    // clear recipe id from local storage
+    localStorage.removeItem('recipe');
 })
 
 // signup form
@@ -54,6 +66,29 @@ nav_LoginLink.addEventListener('click', () => {
 nav_RecipeLink.addEventListener('click', async () => {
     // show recipe book
     displayDiv(div_Recipes);
+    // clear recipe id from local storage
+    localStorage.removeItem('recipe');
+    // empty recipes
+    validRecipes = [];
+    // grab user
+    const userRes = await axios.get('http://localhost:3001/users/profile', {
+        headers: {
+            Authorization: localStorage.getItem('userId')
+        }
+    });
+    const user = userRes.data.user;
+    // show user info
+    document.querySelector('#user-recipe-book').innerHTML = `${user.name}'s Recipe Book`;
+
+    // grab users saved recipes
+    const res = await axios.get('http://localhost:3001/users/recipes', {
+        headers: {
+            Authorization: localStorage.getItem('userId')
+        }
+    });
+    validRecipes = res.data.recipes;
+    // show recipes
+    showRecipes(validRecipes, true, false, false);
 })
 
 // profile
@@ -82,6 +117,19 @@ but_EditProfile.addEventListener('click', editProfile);
 but_SaveChanges.addEventListener('click', saveChanges);
 // cancel profile changes
 but_CancelChanges.addEventListener('click', cancelChanges);
+
+// previous recipe
+but_PrevRecipe.addEventListener('click', () =>
+{
+    showRecipes(validRecipes, false, true, false);
+})
+// next recipe
+but_NextRecipe.addEventListener('click', () =>
+{
+    showRecipes(validRecipes, false, false, true);
+})
+// save recipe
+but_SaveRecipe.addEventListener('click', saveRecipe);
 
 
 //=============== FORM SUBMISSIONS ===============//
@@ -158,6 +206,7 @@ document.querySelector('.recipe-form').addEventListener('submit', (event) =>
     event.preventDefault();
     // clear recipe info
     clearElement(div_RecipeInfo);
+    validRecipes = [];
     // get ingredients
     const ingredients = document.querySelectorAll('.ingredient');
     // populate recipe info section
@@ -227,6 +276,30 @@ checkForUser();
 // update UI based on nav link clicked
 function displayDiv (element)
 {
+    // check if viewing recipes
+    if (element.classList.contains('recipe-grid'))
+    {
+        // show recipes
+        div_RecipeGrid.classList.remove('hidden');
+        // check if on recipe book page
+        if (!div_Recipes.classList.contains('hidden'))
+        {
+            // hide save recipe button
+            but_SaveRecipe.classList.add('hidden');
+            // show delete recipe button
+            but_DeleteRecipe.classList.remove('hidden');
+        }
+        // not on recipe book page - home
+        else
+        {
+            // hide delete recipe button
+            but_DeleteRecipe.classList.add('hidden');
+            // show save recipe button
+            but_SaveRecipe.classList.remove('hidden');
+        }
+        return;
+    }
+
     // hide all divs
     document.querySelectorAll('div').forEach(d => d.classList.add('hidden'));
     // hide profile update form
@@ -286,8 +359,6 @@ async function checkRecipes (ingredients)
 {
     // see if an ingredient can be used for a recipe and if so check for the other required ingredients. if everything checks out, add recipe to array to be returned
 
-    // final recipe array
-    let validRecipes = [];
     // condensed ingredients array
     let givenIngredients = [];
     try {
@@ -378,10 +449,106 @@ async function checkRecipes (ingredients)
                 })
             })
         })
-        console.log(validRecipes);
         // display recipe info
+        showRecipes(validRecipes, true, false, false);
     } catch (error) {
         alert('there was a problem with getting the recipes');
+        console.log(error.message);
+    }
+}
+// display recipes
+function showRecipes (recipes, start, prev, next)
+{
+    // display recipe grid div
+    displayDiv(div_RecipeGrid);
+    // current recipe var
+    let currentRecipe;
+    let i = localStorage.getItem('recipe');
+    // check if starting recipe and there is at least one recipe
+    if (start && recipes.length > 0)
+    {
+        i = 0;
+        localStorage.setItem('recipe', i);
+        currentRecipe = recipes[i];
+        // hide previous recipe button
+        but_PrevRecipe.classList.add('hidden');
+        // show next recipe button if there are more recipes
+        if (i < recipes.length - 1)
+        {
+            but_NextRecipe.classList.remove('hidden');
+        }
+        else
+        {
+            but_NextRecipe.classList.add('hidden');
+        }
+    }
+    // previous recipe
+    else if (prev && i > 0)
+    {
+        i--;
+        localStorage.setItem('recipe', i);
+        currentRecipe = recipes[i];
+        // hide previous recipe button if i is 0
+        if (i === 0)
+        {
+            but_PrevRecipe.classList.add('hidden');
+        }
+        // show next recipe
+        but_NextRecipe.classList.remove('hidden');
+    }
+    // next recipe
+    else if (next && i < recipes.length - 1)
+    {
+        i++;
+        localStorage.setItem('recipe', i);
+        currentRecipe = recipes[i];
+        // hide next recipe button if at last recipe
+        if (i === recipes.length - 1)
+        {
+            but_NextRecipe.classList.add('hidden');
+        }
+        // show prev recipe button
+        but_PrevRecipe.classList.remove('hidden');
+    }
+
+    // set dom elements id to current recipe name
+    document.querySelector('.recipe-name').id = currentRecipe.name;
+    document.querySelector('.recipe-name').innerHTML = currentRecipe.name;
+
+    // fill dom elements with recipe info one at a time
+    for (let i = 1; i < 10; i++)
+    {
+        let ingredient = eval(`currentRecipe.ing${i}`);
+        const slot = `#ingredient-slot-${i}`;
+        document.querySelector(slot).className = '';
+        document.querySelector(slot).classList.add('slot');
+        if (ingredient !== '')
+        {
+            ingredient = ingredient.replace(/\s/g, '_');
+            document.querySelector(slot).classList.add(ingredient);
+        }
+    }
+}
+// save recipe
+async function saveRecipe ()
+{
+    // get recipe name from dom element
+    const recipe = document.querySelector('.recipe-name').id;
+
+    try {
+        // save recipe to user
+        const res = await axios.post('http://localhost:3001/users/recipes', {
+            recipe: recipe
+            }, {
+            headers: {
+                Authorization: localStorage.getItem('userId')
+            }
+        })
+
+        // console.log(res.data.message);
+    } catch (error) {
+        alert('recipe could not be saved');
+        console.log(error.message);
     }
 }
 

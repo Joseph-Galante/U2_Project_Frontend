@@ -8,6 +8,23 @@
   cursor: pointer;
 }
 
+.ingredients-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 310px;
+  height: 300px;
+}
+
+.slot {
+  width: 100px;
+  height: 100px;
+  margin: auto 0;
+  border: 1px solid red;
+}
+
 .hidden {
   display: none;
 }
