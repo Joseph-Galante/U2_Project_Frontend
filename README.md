@@ -17,7 +17,7 @@ Home Screen
 
 Recipe Book
 
-![wireframe](https://i.imgur.com/YdBQp37.png?1)
+![wireframe](https://i.imgur.com/aOwMMaI.png)
 - Shows a user's saved recipes
 
 ## User Stories
