@@ -133,7 +133,7 @@ document.querySelector('.signup-form').addEventListener('submit', async (event) 
 
     try {
     // make user
-    const res = await axios.post('http://localhost:3001/users', {
+    const res = await axios.post('https://minecraft-recipe-app.herokuapp.com/users', {
         name: name,
         email: email,
         password: password
@@ -166,7 +166,7 @@ document.querySelector('.login-form').addEventListener('submit', async (event) =
 
     try {
     // login user
-    const res = await axios.post('http://localhost:3001/users/login', {
+    const res = await axios.post('https://minecraft-recipe-app.herokuapp.com/users/login', {
         email: email,
         password: password
     })
@@ -239,8 +239,9 @@ function checkForUser ()
     // hide signup, login links
     nav_SignupLink.classList.add('hidden');
     nav_LoginLink.classList.add('hidden');
-    // display recipe book, logout link
+    // display recipe book, profile, logout links
     nav_RecipeLink.classList.remove('hidden');
+    nav_ProfileLink.classList.remove('hidden');
     nav_LogoutLink.classList.remove('hidden');
     // show save recipe button
     but_SaveRecipe.classList.remove('hidden');
@@ -248,8 +249,9 @@ function checkForUser ()
   // no user logged in
   else
   {
-    // hide recipe book, logout link
+    // hide recipe book, profile, logout links
     nav_RecipeLink.classList.add('hidden');
+    nav_ProfileLink.classList.add('hidden');
     nav_LogoutLink.classList.add('hidden');
     // display signup, login links
     nav_SignupLink.classList.remove('hidden');
@@ -384,7 +386,7 @@ async function checkRecipes (ingredients)
             }
         })
         // get all recipes
-        const res = await axios.get('http://localhost:3001/recipes');
+        const res = await axios.get('https://minecraft-recipe-app.herokuapp.com/recipes');
         const recipes = res.data.recipes;
         // condense recipe ingredients
         recipes.forEach(recipe =>
@@ -576,7 +578,7 @@ async function saveRecipe ()
 
     try {
         // save recipe to user
-        const res = await axios.post('http://localhost:3001/users/recipes', {
+        const res = await axios.post('https://minecraft-recipe-app.herokuapp.com/users/recipes', {
             recipe: recipe
             }, {
             headers: {
@@ -608,7 +610,7 @@ async function deleteRecipe ()
 
     try {
         // delete recipe from recipe book
-        const res = await axios.delete('http://localhost:3001/users/recipes', {
+        const res = await axios.delete('https://minecraft-recipe-app.herokuapp.com/users/recipes', {
             headers: {
                 Authorization: localStorage.getItem('userId')
             },
@@ -634,7 +636,7 @@ async function showRecipeBook ()
     validRecipes = [];
     try {
         // grab user
-        const userRes = await axios.get('http://localhost:3001/users/profile', {
+        const userRes = await axios.get('https://minecraft-recipe-app.herokuapp.com/users/profile', {
             headers: {
                 Authorization: localStorage.getItem('userId')
             }
@@ -644,7 +646,7 @@ async function showRecipeBook ()
         document.querySelector('#user-recipe-book').innerHTML = `${user.name}'s Recipe Book`;
 
         // grab users saved recipes
-        const res = await axios.get('http://localhost:3001/users/recipes', {
+        const res = await axios.get('https://minecraft-recipe-app.herokuapp.com/users/recipes', {
             headers: {
                 Authorization: localStorage.getItem('userId')
             }
@@ -669,7 +671,7 @@ async function showProfile ()
     but_EditProfile.classList.remove('hidden');
 
     // grab user
-    const res = await axios.get('http://localhost:3001/users/profile', {
+    const res = await axios.get('https://minecraft-recipe-app.herokuapp.com/users/profile', {
         headers: {
             Authorization: localStorage.getItem('userId')
         }
@@ -711,7 +713,7 @@ async function saveChanges ()
         else
         {
             // update user
-            await axios.put('http://localhost:3001/users/profile', {
+            await axios.put('https://minecraft-recipe-app.herokuapp.com/users/profile', {
                 name: name,
                 email: email
                 // password: password

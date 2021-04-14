@@ -21,14 +21,14 @@ app.get('/', (req, res) => {
 
 app.get('/main.js', async (req, res) => {
   const filepath = path.join(__dirname, 'main.js')
-  // check if running from heroku
-  if (process.env.NODE_ENV === 'production')
+  // check if running locally
+  if (process.env.NODE_ENV === 'development')
   {
     await replaceInFile(
     {
       files: filepath,
-      from: 'http://localhost:3001',
-      to: 'https://minecraft-recipe-app.herokuapp.com'
+      from: 'https://minecraft-recipe-app.herokuapp.com',
+      to: 'http://localhost:3001'
     })
   }
   res.sendFile(filepath)
