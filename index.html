@@ -19,19 +19,22 @@
 
     <div class="homeScreen">
         <h1>Welcome to the Minecraft Recipe App</h1>
-        <form class="recipe-form">
+        <form autocomplete="off" action="https://minecraft-recipe-finder.herokuapp.com" class="recipe-form">
             <section class="ingredients">
                 <section class="ingredient">
-                    <input type="text" id="ingredient-name-1" placeholder="Ingredient">
+
+                    <section class="autocomplete">
+                        <input type="text" id="ingredient-name-1" placeholder="Ingredient">
+                    </section>
 
                     <input type="number" id="ingredient-quantity-1" placeholder="Quantity">
                 </section>
             </section>
 
-            <input type="button" id="add-ingredient" value="+">
-            <input type="button" id="remove-ingredient" value="-">
+            <input type="button" class="ingredientButton" id="add-ingredient" value="+">
+            <input type="button" class="ingredientButton" id="remove-ingredient" value="-">
       
-            <input type="submit" value="Get Recipes">
+            <input type="submit" class="ingredientSubmit" value="Get Recipes">
         </form>
         <div class="recipeInfo">
             <h1>Ingredients</h1>

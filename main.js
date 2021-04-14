@@ -1,6 +1,8 @@
 //=============== VARIABLES ===============//
 // final recipe array
 let validRecipes = [];
+// autocomplete ingredients array
+const VALID_INGREDIENTS = ['wooden plank', 'bowl', 'red mushroom', 'brown mushroom', 'wheat', 'apple', 'gold nugget', 'sugar cane', 'milk bucket', 'sugar', 'egg', 'cocoa beans', 'melon slice', 'pumpkin', 'carrot', 'cooked rabbit', 'baked potato', 'flower', 'glass bottle', 'honey block', 'gold ingot'];
 
 
 //=============== DOCUMENT QUERIES ===============//
@@ -193,7 +195,7 @@ document.querySelector('.recipe-form').addEventListener('submit', (event) =>
     ingredients.forEach(ingredient =>
     {
         // get ingredient values
-        const name = ingredient.children[0].value;
+        const name = ingredient.children[0].children[0].value;
         const quantity = ingredient.children[1].value;
         // check if fields are empty
         if (name !== '' && quantity !== '')
@@ -280,10 +282,11 @@ function displayDiv (element)
             // show save recipe button
             but_SaveRecipe.classList.remove('hidden');
         }
-        // remove save button if no user
-        checkForUser();
         return;
     }
+
+    // remove save button if no user
+    checkForUser();
 
     // hide all divs
     document.querySelectorAll('div').forEach(d => d.classList.add('hidden'));
@@ -316,12 +319,17 @@ function addIngredient ()
     const newIngredient = document.createElement('section');
     newIngredient.classList.add('ingredient');
     // create new input fields for new ingredient
+    // new autocomplete section
+    const newAuto = document.createElement('section');
+    newAuto.classList.add('autocomplete');
+
     // new name field
     const newName = document.createElement('input');
     newName.type = "text";
     nameId = `ingredient-name-${sec_Ingredients.childElementCount + 1}`;
     newName.id = nameId;
     newName.placeholder = "Ingredient";
+
     // new quantity field
     const newQuantity = document.createElement('input');
     newQuantity.type = "number";
@@ -329,9 +337,12 @@ function addIngredient ()
     newQuantity.id = quantityId;
     newQuantity.placeholder = "Quantity";
     // add input fields to new ingredient
-    newIngredient.append(newName, newQuantity);
+    newAuto.append(newName);
+    newIngredient.append(newAuto, newQuantity);
     // add new ingredient to ingredients section
     sec_Ingredients.append(newIngredient);
+    // run autocomplete
+    autocomplete(document.querySelector(`#${nameId}`), VALID_INGREDIENTS);
 }
 // remove ingredient DOM element
 function removeIngredient ()
@@ -347,7 +358,6 @@ function removeIngredient ()
 async function checkRecipes (ingredients)
 {
     // see if an ingredient can be used for a recipe and if so check for the other required ingredients. if everything checks out, add recipe to array to be returned
-
     // condensed ingredients array
     let givenIngredients = [];
     try {
@@ -355,7 +365,7 @@ async function checkRecipes (ingredients)
         ingredients.forEach(ingredient =>
         {
             // grab ingredient values
-            const name = ingredient.children[0].value.toLowerCase();
+            const name = ingredient.children[0].children[0].value.toLowerCase();
             const quantity = ingredient.children[1].value;
             // check if either value is empty
             if (name !== '' && quantity !== '')
@@ -472,6 +482,7 @@ function showRecipes (recipes, start, prev, next)
     // check for empty recipes arr
     if (recipes.length === 0)
     {
+        div_RecipeGrid.classList.add('hidden');
         return;
     }
     // display recipe grid div
@@ -582,7 +593,6 @@ async function deleteRecipe ()
                 recipe: recipe
             }
         })
-
         // show recipe book
         showRecipeBook();
     } catch (error) {
@@ -616,11 +626,8 @@ async function showRecipeBook ()
             }
         });
         validRecipes = res.data.recipes;
-        // show recipes if there are recipes to show
-        if (validRecipes.length > 0)
-        {
-            showRecipes(validRecipes, true, false, false);
-        }
+        
+        showRecipes(validRecipes, true, false, false);
     } catch (error) {
         alert('could not get recipe book');
         console.log(error.message);
@@ -710,3 +717,102 @@ function clearElement (element)
         element.removeChild(element.lastElementChild);
     }
 }
+
+
+
+// autocomplete
+function autocomplete (input, ingredients)
+{
+    let currentFocus;
+    // when user is writing in text field
+    input.addEventListener("input", function(e) {
+        let i;
+        let val = this.value;
+        // close any open autocomplete lists
+        closeAllLists();
+        if (!val) { return false;}
+        currentFocus = -1;
+        // create section for autocomplete info
+        const newSection = document.createElement("section");
+        newSection.id = 'autocomplete-list';
+        newSection.classList.add('autocomplete-items');
+        // add section to autocomplete container
+        this.parentNode.append(newSection);
+        // loop through ingredients
+        for (i = 0; i < ingredients.length; i++) {
+            // check if input matches any known ingredients
+            if (ingredients[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            // create a section for each match
+            autoSection = document.createElement("section");
+            // bold matching letters
+            autoSection.innerHTML = "<strong>" + ingredients[i].substr(0, val.length) + "</strong>";
+            autoSection.innerHTML += ingredients[i].substr(val.length);
+            // insert input field for current ingredient
+            autoSection.innerHTML += "<input type='hidden' value='" + ingredients[i] + "'>";
+            // click on ingredient in list
+            autoSection.addEventListener("click", function(e) {
+                // insert ingredient into text field
+                input.value = this.getElementsByTagName("input")[0].value;
+                // close all autocomplete lists
+                closeAllLists();
+            });
+            newSection.append(autoSection);
+            }
+        }
+    });
+    // scroll through list with keyboard
+    input.addEventListener("keydown", function(e) {
+        let autoList = document.querySelector('#autocomplete-list');
+        if (autoList) autoList = autoList.getElementsByTagName("section");
+        if (e.keyCode == 40) {
+            // arrow down
+            currentFocus++;
+            addActive(autoList);
+        }
+        else if (e.keyCode == 38) {
+            // arrow up
+            currentFocus--;
+            addActive(autoList);
+        }
+        else if (e.keyCode == 13) {
+            // enter key - submit
+            e.preventDefault();
+            if (currentFocus > -1) {
+                // manual submit
+                if (autoList) autoList[currentFocus].click();
+            }
+        }
+    });
+    function addActive(autoList) {
+        // check for list
+        if (!autoList) return false;
+        // remove active on all lists
+        removeActive(autoList);
+        if (currentFocus >= autoList.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (autoList.length - 1);
+        // make active autocomplete list
+        autoList[currentFocus].classList.add("autocomplete-active");
+    }
+    function removeActive(autoList) {
+        // remove active from input autocomplete list
+        for (let i = 0; i < autoList.length; i++) {
+            autoList[i].classList.remove("autocomplete-active");
+        }
+    }
+    function closeAllLists(element) {
+        // close all autocomplete lists except input element
+        let autoItems = document.querySelectorAll('.autocomplete-items');
+        for (let i = 0; i < autoItems.length; i++)
+        {
+            if (element != autoItems[i] && element != input) {
+                autoItems[i].parentNode.removeChild(autoItems[i]);
+            }
+        }
+    }
+    // close autocomplete lists if click is outside of list
+    document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+    });
+}
+// call autocomplete on page load
+autocomplete(document.querySelector('#ingredient-name-1'), VALID_INGREDIENTS);
