@@ -17,6 +17,8 @@
         <span id="logout-link" class="nav-link">Logout</span>
     </nav>
 
+    <h4 class="hidden" id="messages"></h4>
+    
     <div class="homeScreen">
         <h1>Welcome to the Minecraft Recipe App</h1>
         <form autocomplete="off" action="https://minecraft-recipe-finder.herokuapp.com" class="recipe-form">
@@ -45,8 +47,6 @@
     </div>
     <div class="recipe-grid">
         <h1 class='recipe-name'>Recipe Name</h1>
-
-        <input class="hidden" type="button" id="prev-recipe" value="Previous Recipe">
         
         <section class="ingredients-grid">
             <section class="slot" id="ingredient-slot-1"></section>
@@ -59,11 +59,15 @@
             <section class="slot" id="ingredient-slot-8"></section>
             <section class="slot" id="ingredient-slot-9"></section>
         </section>
+        <section class="crafting-grid">
+            <input class="hidden" type="button" id="prev-recipe" value="Previous Recipe">
+            
+            <input type="button" id="save-recipe" value="Save Recipe">
+            <input type="button" id="delete-recipe" value="Delete Recipe">
+    
+            <input class="hidden" type="button" id="next-recipe" value="Next Recipe">
+        </section>
 
-        <input class="hidden" type="button" id="next-recipe" value="Next Recipe">
-
-        <input type="button" id="save-recipe" value="Save Recipe">
-        <input type="button" id="delete-recipe" value="Delete Recipe">
     </div>
     <div class="signUpScreen">
         <form class="signup-form">
@@ -76,7 +80,7 @@
             <label for="signup-password">Password</label>
             <input type="password" id="signup-password">
       
-            <input type="submit" value="Sign Up">
+            <input type="submit" id="signup-button" value="Sign Up">
         </form>
     </div>
     <div class="loginScreen">
@@ -87,7 +91,7 @@
             <label for="login-password">Password</label>
             <input type="password" id="login-password">
       
-            <input type="submit" value="Login">
+            <input type="submit" id="login-button" value="Login">
         </form>
     </div>
     <div class="profile">
@@ -109,9 +113,10 @@
             
             <!-- <label for="update-password">Password</label>
             <input type="password" id="update-password"> -->
-            
-            <input type="button" id="cancel-changes" value="Cancel Changes">
-            <input type="button" id="save-changes" value="Save Changes">
+            <section class="change-buttons">
+                <input type="button" id="cancel-changes" value="Cancel Changes">
+                <input type="button" id="save-changes" value="Save Changes">
+            </section>
         </form>
     </div>
 

@@ -1,7 +1,21 @@
+body {
+  font: 16px Arial;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: url('https://i.imgur.com/JyafrUc.jpg') no-repeat;
+  background-size: cover;
+  color: white;
+}
+
 .nav-link {
-    color: blue;
-    text-decoration: underline;
+    color: white;
     margin: 0.5em;
+    padding: 5px;
+    font: 20px Arial;
+    background-color: orange;
 }
 
 .nav-link:hover {
@@ -12,10 +26,12 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  width: 320px;
-  height: 300px;
+  width: 350px;
+  height: 350px;
+  position: relative;
+  top: 6px;
 }
 
 .ingredients {
@@ -30,23 +46,95 @@
 }
 
 .ingredientButton {
-  width: 4%;
+  width: 40px;
   height: 40px;
 }
 
 .ingredientSubmit {
-  width: 15%;
+  width: 200px;
   height: 40px;
+  color: black;
+}
+
+.recipe-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: url('https://i.imgur.com/nz9nsUm.jpg') no-repeat;
+  background-size: cover;
+  width: 600px;
+  height: 600px;
+  margin: 10px;
+}
+
+.crafting-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#prev-recipe, #next-recipe, #save-recipe, #delete-recipe, #cancel-changes, #save-changes, #edit-user, #signup-button, #login-button {
+  margin: 50px 15px 0 15px;
 }
 
 .slot {
   display: flex;
   justify-content: center;
   align-content: center;
-  width: 100px;
-  height: 100px;
-  margin: auto 0;
-  border: 3px solid black;
+  width: 70px;
+  height: 70px;
+  margin: 0px 15px 0px 15px;
+  padding: 5px;
+  position: relative;
+}
+
+.slot .tooltip {
+  display: none;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 20px;
+}
+
+.slot:hover .tooltip {
+  display: inline-block;
+}
+
+.profile, .update-form, .signup-form, .login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.change-buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#edit-user, #save-changes, #cancel-changes, #signup-button, #login-button {
+  width: 200px;
+  height: 50px
+}
+
+.success {
+  color: green;
+  background-color: white;
+  border-radius: 6%;
+  border: 2px solid green;
+  padding: 8px;
+}
+.fail {
+  color: red;
+  background-color: white;
+  border-radius: 6%;
+  border: 2px solid red;
+  padding: 8px;
 }
 
 .wooden_plank {
@@ -186,6 +274,10 @@
   display: none;
 }
 
+label {
+  margin: 10px;
+}
+
 .autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
@@ -197,14 +289,23 @@ input {
   padding: 10px;
   font-size: 16px;
   margin: 5px 7px 0 0;
+  border-radius: 6%;
 }
 input[type=text] {
   background-color: #f1f1f1;
   width: 85%;
 }
+input[type=password] {
+  background-color: #f1f1f1;
+  width: 85%;
+}
 input[type=submit] {
-  background-color: DodgerBlue;
+  background-color: burlywood;
   color: #fff;
+}
+input[type=button] {
+  background-color: olivedrab;
+  color: black;
 }
 .autocomplete-items {
   position: absolute;
@@ -216,6 +317,7 @@ input[type=submit] {
   top: 100%;
   left: 0;
   right: 0;
+  color: black;
 }
 .autocomplete-items section {
   padding: 10px;

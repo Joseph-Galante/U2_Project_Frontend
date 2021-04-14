@@ -2,7 +2,7 @@
 // final recipe array
 let validRecipes = [];
 // autocomplete ingredients array
-const VALID_INGREDIENTS = ['wooden plank', 'bowl', 'red mushroom', 'brown mushroom', 'wheat', 'apple', 'gold nugget', 'sugar cane', 'milk bucket', 'sugar', 'egg', 'cocoa beans', 'melon slice', 'pumpkin', 'carrot', 'cooked rabbit', 'baked potato', 'flower', 'glass bottle', 'honey block', 'gold ingot'];
+const VALID_INGREDIENTS = ['wooden plank', 'bowl', 'red mushroom', 'brown mushroom', 'wheat', 'apple', 'gold nugget', 'sugar cane', 'milk bucket', 'sugar', 'egg', 'cocoa beans', 'melon slice', 'pumpkin', 'carrot', 'cooked rabbit', 'baked potato', 'flower', 'glass bottle', 'honey block', 'gold ingot'].sort();
 
 
 //=============== DOCUMENT QUERIES ===============//
@@ -41,6 +41,10 @@ const but_PrevRecipe = document.querySelector('#prev-recipe');
 const but_NextRecipe = document.querySelector('#next-recipe');
 const but_SaveRecipe = document.querySelector('#save-recipe');
 const but_DeleteRecipe = document.querySelector('#delete-recipe');
+
+// misc
+const messages = document.querySelector('#messages');
+
 
 //=============== EVENT LISTENERS ===============//
 
@@ -279,8 +283,6 @@ function displayDiv (element)
         {
             // hide delete recipe button
             but_DeleteRecipe.classList.add('hidden');
-            // show save recipe button
-            but_SaveRecipe.classList.remove('hidden');
         }
         return;
     }
@@ -292,6 +294,8 @@ function displayDiv (element)
     document.querySelectorAll('div').forEach(d => d.classList.add('hidden'));
     // hide profile update form
     form_UpdateProfile.classList.add('hidden');
+    // hide messages
+    messages.classList.add('hidden');
 
     // check if user is searching for recipes
     if (element.classList.contains('recipeInfo'))
@@ -546,12 +550,21 @@ function showRecipes (recipes, start, prev, next)
     {
         let ingredient = eval(`currentRecipe.ing${i}`);
         const slot = `#ingredient-slot-${i}`;
-        document.querySelector(slot).className = '';
-        document.querySelector(slot).classList.add('slot');
+        const sec_Slot = document.querySelector(slot);
+        sec_Slot.className = '';
+        sec_Slot.classList.add('slot');
+        // clear all children of slot
+        sec_Slot.innerHTML = '';
         if (ingredient !== '')
         {
+            // create dom elements for tooltip
+            const tooltip = document.createElement('span');
+            tooltip.classList.add('tooltip');
+            tooltip.innerHTML = ingredient;
+            // add tooltip to slot
+            sec_Slot.append(tooltip);
             ingredient = ingredient.replace(/\s/g, '_');
-            document.querySelector(slot).classList.add(ingredient);
+            sec_Slot.classList.add(ingredient);
         }
     }
 }
@@ -570,8 +583,18 @@ async function saveRecipe ()
                 Authorization: localStorage.getItem('userId')
             }
         })
-
-        // console.log(res.data.message);
+        // check if recipe was a;ready saved
+        if (res.data.message === 'recipe already saved')
+        {
+            // show recipe save fail message
+            displayMessage(false, 'Recipe is already in your recipe book. You may not save the same recipe multiple times.');
+        }
+        // not saved yet
+        else
+        {
+            // show recipe save success message
+            displayMessage(true, 'Recipe was saved successfully. Go to your recipe book to view all of your saved recipes.');
+        }
     } catch (error) {
         alert('recipe could not be saved');
         console.log(error.message);
@@ -593,6 +616,7 @@ async function deleteRecipe ()
                 recipe: recipe
             }
         })
+        displayMessage(true, 'Recipe deleted successfully.')
         // show recipe book
         showRecipeBook();
     } catch (error) {
@@ -626,7 +650,7 @@ async function showRecipeBook ()
             }
         });
         validRecipes = res.data.recipes;
-        
+
         showRecipes(validRecipes, true, false, false);
     } catch (error) {
         alert('could not get recipe book');
@@ -665,6 +689,8 @@ function editProfile ()
     // hide edit button and profile info
     but_EditProfile.classList.add('hidden');
     sec_ProfileInfo.classList.add('hidden');
+    // hide messages
+    messages.classList.add('hidden');
     // show update form and fill fields
     form_UpdateProfile.classList.remove('hidden');
 }
@@ -696,6 +722,7 @@ async function saveChanges ()
             })
             // display new profile info
             showProfile();
+            displayMessage(true, 'Profile updated successfully.');
         }
     } catch (error) {
         alert('profile could not be updated');
@@ -816,3 +843,21 @@ function autocomplete (input, ingredients)
 }
 // call autocomplete on page load
 autocomplete(document.querySelector('#ingredient-name-1'), VALID_INGREDIENTS);
+
+
+// display message
+function displayMessage (success, message)
+{
+    if (success)
+    {
+        messages.classList.remove('fail');
+        messages.classList.add('success');
+    }
+    else
+    {
+        messages.classList.remove('success');
+        messages.classList.add('fail');
+    }
+    messages.innerHTML = message;
+    messages.classList.remove('hidden');
+}
