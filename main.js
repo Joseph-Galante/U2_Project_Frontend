@@ -243,8 +243,9 @@ function checkForUser ()
     nav_RecipeLink.classList.remove('hidden');
     nav_ProfileLink.classList.remove('hidden');
     nav_LogoutLink.classList.remove('hidden');
-    // show save recipe button
+    // show active save recipe button
     but_SaveRecipe.classList.remove('hidden');
+    but_SaveRecipe.style.backgroundColor = 'olivedrab';
   }
   // no user logged in
   else
@@ -256,8 +257,9 @@ function checkForUser ()
     // display signup, login links
     nav_SignupLink.classList.remove('hidden');
     nav_LoginLink.classList.remove('hidden');
-    // hide save recipe button
-    but_SaveRecipe.classList.add('hidden');
+    // show inactive save recipe button
+    but_SaveRecipe.classList.remove('hidden');
+    but_SaveRecipe.style.backgroundColor = 'gray';
   }
 }
 // call on page load - see if user is still logged in
@@ -573,6 +575,12 @@ function showRecipes (recipes, start, prev, next)
 // save recipe
 async function saveRecipe ()
 {
+    // return if no user logged in
+    if (!localStorage.getItem('userId'))
+    {
+        displayMessage(false, 'You can only save a recipe while logged in. Signup or login to start a recipe book.')
+        return;
+    }
     // get recipe name from dom element
     const recipe = document.querySelector('.recipe-name').id;
 
@@ -585,7 +593,7 @@ async function saveRecipe ()
                 Authorization: localStorage.getItem('userId')
             }
         })
-        // check if recipe was a;ready saved
+        // check if recipe was already saved
         if (res.data.message === 'recipe already saved')
         {
             // show recipe save fail message
@@ -595,7 +603,7 @@ async function saveRecipe ()
         else
         {
             // show recipe save success message
-            displayMessage(true, 'Recipe was saved successfully. Go to your recipe book to view all of your saved recipes.');
+            displayMessage(true, 'Recipe saved successfully. Go to your recipe book to view all of your saved recipes.');
         }
     } catch (error) {
         alert('recipe could not be saved');
