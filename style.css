@@ -137,6 +137,10 @@ body {
   padding: 8px;
 }
 
+#delete-recipe {
+  background-color: orangered;
+}
+
 .wooden_plank {
   background-image: url("https://i.imgur.com/UtSSeHD.png");
   background-position: center;
