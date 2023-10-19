@@ -1,0 +1,11 @@
+runtime: nodejs16
+service: default
+env: standard
+handlers:
+  - url: /static
+    static_dir: static
+    secure: always
+
+  - url: /.*
+    script: auto
+    secure: always
